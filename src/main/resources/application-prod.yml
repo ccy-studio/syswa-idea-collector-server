@@ -1,0 +1,21 @@
+spring:
+  h2:
+    console:
+      path: /h2-console #h2嵌入式数据库控制台，可以通过浏览器访问
+      enabled: true
+      settings:
+        web-allow-others: true
+    local: /opt/idea_java #H2数据库的保存位置
+
+wx:
+  miniapp:
+    appid: xxxx
+    secret: xxxxx
+
+
+#Token的有效期
+expireToken: 36000
+#保存的图片路径
+save-image-path: /opt/idea_java/upload
+#AI生图的KEY秘钥
+ai-api-key: xxxxxxxx

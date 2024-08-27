@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: idea-collector
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  profiles:
+    active: prod
+  datasource:
+    url: jdbc:h2:~/h2_database_java;MODE=MySQL  # 数据库
+    driver-class-name: org.h2.Driver
+    username: root
+    password: root
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 100000
+      max-lifetime: 270000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3s
+      database: 1
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+
+mybatis-plus:
+  mapperLocations: classpath*:/mappers/**/*.xml
+  typeAliasesPackage: cn.saisiawa.ideacollector.domain
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+
+logging:
+  level:
+    cn.saisaiwa.ideacollector.mapper: debug

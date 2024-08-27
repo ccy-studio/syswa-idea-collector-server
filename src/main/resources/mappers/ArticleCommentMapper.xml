@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saisiawa.ideacollector.mapper.ArticleCommentMapper">
+    <update id="increaseGive">
+        update T_ARTICLE_COMMENT
+        set GIVE = GIVE + 1
+        where ID = #{id}
+    </update>
+
+    <select id="selectCommentByArticleId" resultType="cn.saisiawa.ideacollector.domain.model.ArticleCommentExt">
+        select ac.*,
+        tu.NICK_NAME as userNickName,
+        tu.AVATAR as userAvatar
+        from T_ARTICLE_COMMENT as ac join T_USER as tu on tu.id = ac.USER_ID
+        where ac.ARTICLE_ID = #{id}
+        <if test="parentId neq null">
+            AND ac.PARENT_ID = #{parentId}
+        </if>
+        <if test="parentId eq null">
+            AND ac.PARENT_ID is null
+        </if>
+        order by ac.CREATE_TIME
+    </select>
+</mapper>

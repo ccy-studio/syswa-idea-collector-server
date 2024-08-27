@@ -1,0 +1,25 @@
+spring:
+  h2:
+    console:
+      path: /h2-console #h2嵌入式数据库控制台，可以通过浏览器访问
+      enabled: true
+  data:
+    redis:
+      host: locahost
+      port: 6879
+      password: xxxx
+      timeout: 3s
+      database: 1
+
+wx:
+  miniapp:
+    appid: xxx
+    secret: xxx
+
+
+#Token的有效期
+expireToken: 3600
+#保存的图片路径
+save-image-path: D:\tmp\saveImage
+#AI生图的KEY秘钥
+ai-api-key: xxx

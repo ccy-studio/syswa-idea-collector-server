@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.saisiawa.ideacollector.mapper.ArticleMapper">
+
+    <update id="increaseSee">
+        update T_ARTICLE
+        set SEE = SEE + 1
+        where ID = #{id}
+    </update>
+
+    <update id="increaseGive">
+        update T_ARTICLE
+        set GIVE = GIVE + 1
+        where ID = #{id}
+    </update>
+
+    <select id="selectSmallList" resultType="cn.saisiawa.ideacollector.domain.vo.ArticleListVo">
+        select (ta.GIVE + ta.SEE - ta.STATUS) as idx,
+        ta.ID,
+        ta.GIVE,
+        ta.SEE,
+        ta.TITLE,
+        ta.COVER,
+        ta.STATUS,
+        ta.CREATE_TIME,
+        ta.USER_ID,
+        us.NICK_NAME as userNickName,
+        us.AVATAR as userAvatar
+        from T_ARTICLE as ta
+        join T_USER as us on us.ID = ta.USER_ID
+        join T_ARTICLE_INFO as ti on ta.id = ti.ARTICLE_ID
+        join (select MAX(ID) as mxid from T_ARTICLE_INFO group by ARTICLE_ID) as mx on mx.mxid = ti.ID
+        <where>
+            <if test="keyword neq null and keyword neq ''">
+                and ( ta.TITLE like concat('%',#{keyword},'%') or
+                ti.CONTENT like concat('%',#{keyword},'%') )
+            </if>
+            <if test="status neq null and status neq -1">
+                and ta.STATUS = #{status}
+            </if>
+        <if test="userId neq null and userId neq -1">
+            and ta.USER_ID = #{userId}
+        </if>
+        </where>
+
+        <if test="sortType neq null">
+            <choose>
+                <when test="sortType == 0">
+                    order by ta.STATUS, idx desc
+                </when>
+                <when test="sortType == 1">
+                    order by ta.GIVE desc
+                </when>
+                <otherwise>
+                    order by ta.CREATE_TIME desc
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <select id="getArticleInfo" resultType="cn.saisiawa.ideacollector.domain.vo.ArticleInfoVo">
+        select ta.ID,
+               ta.GIVE,
+               ta.SEE,
+               ta.TITLE,
+               ta.COVER,
+               ta.STATUS,
+               ta.USER_ID,
+               ta.CREATE_TIME,
+               ti.CONTENT,
+               ti.COMMENT,
+               ti.CREATE_TIME as updateTime,
+               us.NICK_NAME   as userNickName,
+               us.AVATAR      as userAvatar
+        from T_ARTICLE as ta
+                 join T_USER as us on us.ID = ta.USER_ID
+                 join T_ARTICLE_INFO as ti on ta.id = ti.ARTICLE_ID
+                 join (select MAX(ID) as mxid from T_ARTICLE_INFO group by ARTICLE_ID) as mx on mx.mxid = ti.ID
+        where ta.ID = #{id}
+    </select>
+</mapper>
